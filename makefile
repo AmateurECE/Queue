@@ -1,4 +1,4 @@
-P=queue
+P=queuearray
 OBJECTS=
 CFLAGS = -g -Wall -O3
 LDLIBS=
