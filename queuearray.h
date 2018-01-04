@@ -1,4 +1,4 @@
-/*******************************************************************************
+/******************************************************************************
  * TITLE:	    queuearray.h
  *
  * AUTHOR:	    Ethan D. Twardy
@@ -8,19 +8,19 @@
  *
  * CREATED:	    04/05/17
  *
- * LAST EDITED:	    06/07/17
+ * LAST EDITED:	    01/04/2018
  ***/
 
-/* ********************************** NOTE ********************************** */
-/* Due to conflicts between function signatures for the public interfaces for */
-/* this structure and the queue using lists, the two header files cannot be  */
-/* used in the same .c file. This will be patched in a future update.         */
-/* ************************************************************************** */
+/* ********************************* NOTE ********************************* */
+/* Due to conflicts between function signatures for the public interfaces,  */
+/* this structure and the queue using lists cannot be used in the same	    */
+/* namespace. This will be patched in a future update.			    */
+/* ************************************************************************ */
 
 #ifndef __ET_QUEUEARRAY_H__
 #define __ET_QUEUEARRAY_H__
 
-/*******************************************************************************
+/******************************************************************************
  * TYPE DEFINITIONS
  ***/
 
@@ -35,7 +35,7 @@ typedef struct _Queue_ {
 
 } Queue;
 
-/*******************************************************************************
+/******************************************************************************
  * MACRO DEFINITIONS
  ***/
 
@@ -43,7 +43,7 @@ typedef struct _Queue_ {
 #define queue_isempty(queue) (queue_size(queue) == 0 ? 1 : 0)
 #define queue_isfull(queue) (queue_size(queue) == (queue)->capacity ? 1 : 0)
 
-/*******************************************************************************
+/******************************************************************************
  * API FUNCTION PROTOTYPES
  ***/
 
@@ -55,4 +55,4 @@ extern void queue_dest(Queue *);
 
 #endif /* __ET_QUEUEARRAY_H__ */
 
-/******************************************************************************/
+/*****************************************************************************/

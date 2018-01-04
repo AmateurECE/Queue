@@ -1,15 +1,15 @@
-/*******************************************************************************
+/******************************************************************************
  * NAME:	    queuearray.c
  *
  * AUTHOR:	    Ethan D. Twardy
  *
- * DESCRIPTION:	    Contains the implementation of a Queue, using Arrays, as the
- *		    name suggests. Also contains test code. Run 'make debug' to
- *		    compile with the test code.
+ * DESCRIPTION:	    Contains the implementation of a Queue, using Arrays, as
+ *		    the name suggests. Also contains test code. Run
+ *		    'make debug' to compile with the test code.
  *
- * CREATED:	    04/14/17
+ * CREATED:	    04/14/2017
  *
- * LAST EDITED:	    06/07/17
+ * LAST EDITED:	    01/04/2018
  ***/
 
 /* SAMPLE OUTPUT:
@@ -37,7 +37,7 @@
  * int 6 @ 0x7fbe71d00100
  */
 
-/*******************************************************************************
+/******************************************************************************
  * INCLUDES
  ***/
 
@@ -52,11 +52,11 @@
 
 #include "queuearray.h"
 
-/*******************************************************************************
+/******************************************************************************
  * API FUNCTIONS
  ***/
 
-/*******************************************************************************
+/******************************************************************************
  * FUNCTION:	    queue_init
  *
  * DESCRIPTION:	    Initializes a queue pointer to the size specified.
@@ -80,7 +80,7 @@ void queue_init(Queue * queue, void (*destroy)(void *), int size)
   queue->size = 0;
 }
 
-/*******************************************************************************
+/******************************************************************************
  * FUNCTION:	    queue_enqueue
  *
  * DESCRIPTION:	    Adds a new element to the stern of the queue.
@@ -109,13 +109,13 @@ int queue_enqueue(Queue * queue, void * data)
   return 0;
 }    
 
-/*******************************************************************************
+/******************************************************************************
  * FUNCTION:	    queue_dequeue
  *
  * DESCRIPTION:	    Removes the next element from the queue.
  *
  * ARGUMENTS:	    queue: (Queue *) -- the queue to be operated on.
- *		    data: (void **) -- the data is placed here after dequeueing.
+ *		    data: (void **) -- data is placed here after dequeueing.
  *
  * RETURN:	    int -- 0 on success, -1 otherwise.
  *
@@ -138,7 +138,7 @@ int queue_dequeue(Queue * queue, void ** data)
   return 0;
 }
 
-/*******************************************************************************
+/******************************************************************************
  * FUNCTION:	    queue_peek
  *
  * DESCRIPTION:	    Returns the next element in the queue without removing it.
@@ -158,7 +158,7 @@ void * queue_peek(Queue * queue)
   return queue->queue[queue->front];
 }
 
-/*******************************************************************************
+/******************************************************************************
  * FUNCTION:	    queue_dest
  *
  * DESCRIPTION:	    Removes all elements from the queue, and sets all bytes to
@@ -187,7 +187,7 @@ void queue_dest(Queue * queue)
   return;
 }
 
-/*******************************************************************************
+/******************************************************************************
  * MAIN
  ***/
 
@@ -234,4 +234,4 @@ int main(int argc, char * argv[])
 }
 #endif /* CONFIG_DEBUG_ARRAY */
 
-/******************************************************************************/
+/*****************************************************************************/
