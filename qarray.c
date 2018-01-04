@@ -1,5 +1,5 @@
 /******************************************************************************
- * NAME:	    queuearray.c
+ * NAME:	    qarray.c
  *
  * AUTHOR:	    Ethan D. Twardy
  *
@@ -50,7 +50,7 @@
 #include <time.h>
 #endif /* CONFIG_DEBUG_QARRAY */
 
-#include "queuearray.h"
+#include "qarray.h"
 
 /******************************************************************************
  * API FUNCTIONS

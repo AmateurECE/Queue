@@ -1,5 +1,5 @@
 /******************************************************************************
- * TITLE:	    queuearray.h
+ * TITLE:	    qarray.h
  *
  * AUTHOR:	    Ethan D. Twardy
  *

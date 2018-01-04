@@ -11,25 +11,22 @@
 # LAST EDITED:	    01/04/2018
 ###
 
-P = queuearray
-OBJECTS = queuearray.c
-CFLAGS = -Wall -O3
-LDLIBS=
 CC=gcc
-
-$(P):
-	$(CC) $(CFLAGS) -o $(P) $(OBJECTS) $(LDLIBS)
+ifeq ($(MAKECMDGOALS),debug)
+	CFLAGS = -g -O0 -Wall -D CONFIG_DEBUG_QARRAY
+else
+	CFLAGS = -Wall -O3
+endif
 
 .PHONY: debug clean
 
-CFLAGS_DEBUG = -g -O0 -Wall -D CONFIG_DEBUG_QARRAY
+qarray:
 
-debug:
-	$(CC) $(CFLAGS_DEBUG) -o $(P) $(OBJECTS) $(LDLIBS)
+debug: qarray
 
 clean:
-	rm -rf *.c~
-	rm -rf *.h~
-	rm -rf makefile~
+	rm -rf *.dSYM
+	rm -f *.o
+	rm -f qarray
 
 ###############################################################################
