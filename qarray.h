@@ -4,27 +4,21 @@
  * AUTHOR:	    Ethan D. Twardy
  *
  * DESCRIPTION:	    Header file containing macros and typedefs for the C code
- *		    in queuearray.c.
+ *		    in qarray.c.
  *
- * CREATED:	    04/05/17
+ * CREATED:	    04/05/2017
  *
  * LAST EDITED:	    01/04/2018
  ***/
 
-/* ********************************* NOTE ********************************* */
-/* Due to conflicts between function signatures for the public interfaces,  */
-/* this structure and the queue using lists cannot be used in the same	    */
-/* namespace. This will be patched in a future update.			    */
-/* ************************************************************************ */
-
-#ifndef __ET_QUEUEARRAY_H__
-#define __ET_QUEUEARRAY_H__
+#ifndef __ET_QARRAY_H__
+#define __ET_QARRAY_H__
 
 /******************************************************************************
  * TYPE DEFINITIONS
  ***/
 
-typedef struct _Queue_ {
+typedef struct {
 
   void (*destroy)(void *);
   int front;
@@ -33,26 +27,26 @@ typedef struct _Queue_ {
   int size;
   void ** queue;
 
-} Queue;
+} qarray;
 
 /******************************************************************************
  * MACRO DEFINITIONS
  ***/
 
-#define queue_size(queue) ((queue)->size)
-#define queue_isempty(queue) (queue_size(queue) == 0 ? 1 : 0)
-#define queue_isfull(queue) (queue_size(queue) == (queue)->capacity ? 1 : 0)
+#define qarray_size(queue) ((queue)->size)
+#define qarray_isempty(queue) (qarray_size(queue) == 0 ? 1 : 0)
+#define qarray_isfull(queue) (qarray_size(queue) == (queue)->capacity ? 1 : 0)
 
 /******************************************************************************
  * API FUNCTION PROTOTYPES
  ***/
 
-extern void queue_init(Queue *, void (*)(void *), int);
-extern int queue_enqueue(Queue *, void *);
-extern int queue_dequeue(Queue *, void **);
-extern void * queue_peek(Queue *);
-extern void queue_dest(Queue *);
+extern qarray * qarray_create(void (*destroy)(void *), int size);
+extern int qarray_enqueue(qarray * queue, void * data);
+extern int qarray_dequeue(qarray * queue, void ** pData);
+extern void * qarray_peek(qarray * queue);
+extern void qarray_destroy(qarray ** pQueue);
 
-#endif /* __ET_QUEUEARRAY_H__ */
+#endif /* __ET_QARRAY_H__ */
 
 /*****************************************************************************/

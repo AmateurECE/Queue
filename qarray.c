@@ -57,47 +57,56 @@
  ***/
 
 /******************************************************************************
- * FUNCTION:	    queue_init
+ * FUNCTION:	    qarray_create
  *
- * DESCRIPTION:	    Initializes a queue pointer to the size specified.
+ * DESCRIPTION:	    Creates a new qarray and returns a pointer to it.
  *
- * ARGUMENTS:	    queue: (Queue *) -- the queue to be initialized.
- *		    destroy: (void (*)(void *)) -- pointer to a user-defined
+ * ARGUMENTS:	    destroy: (void (*)(void *)) -- pointer to a user-defined
  *			     function meant to free data held in the array.
  *		    size: int -- the size of the queue.
  *
- * RETURN:	    void.
+ * RETURN:	    (qarray *) -- pointer to the new queue, or NULL.
  *
  * NOTES:	    O(1)
  ***/
-void queue_init(Queue * queue, void (*destroy)(void *), int size)
+qarray * qarray_create(void (*destroy)(void *), int size)
 {
-  queue->queue = calloc(size, sizeof(void *));
-  queue->destroy = destroy;
-  queue->front = -1;
-  queue->back = 0;
-  queue->capacity = size;
-  queue->size = 0;
+  if (size <= 0)
+    return NULL;
+
+  qarray * q = NULL;
+  if ((q = malloc(sizeof(qarray))) == NULL)
+    return NULL;
+
+  q->queue = NULL;
+  if ((q->queue = calloc(size, sizeof(void *))) == NULL)
+    return NULL;
+  
+  q->destroy = destroy;
+  q->front = -1;
+  q->back = 0;
+  q->capacity = size;
+  q->size = 0;
+
+  return q;
 }
 
 /******************************************************************************
- * FUNCTION:	    queue_enqueue
+ * FUNCTION:	    qarray_enqueue
  *
  * DESCRIPTION:	    Adds a new element to the stern of the queue.
  *
- * ARGUMENTS:	    queue: (Queue *) -- the queue to be operated on.
+ * ARGUMENTS:	    queue: (qarray *) -- the queue to be operated on.
  *		    data: (void *) -- pointer to the data to be enqueued.
  *
  * RETURN:	    int -- 0 on success, -1 otherwise.
  *
  * NOTES:	    O(1)
  ***/
-int queue_enqueue(Queue * queue, void * data)
+int qarray_enqueue(qarray * queue, void * data)
 {
-
-  if (queue_isfull(queue))
+  if (queue == NULL || qarray_isfull(queue))
     return -1;
-
   
   queue->queue[queue->back] = data;
   queue->back = (queue->back + 1) % queue->capacity;
@@ -110,21 +119,20 @@ int queue_enqueue(Queue * queue, void * data)
 }    
 
 /******************************************************************************
- * FUNCTION:	    queue_dequeue
+ * FUNCTION:	    qarray_dequeue
  *
  * DESCRIPTION:	    Removes the next element from the queue.
  *
- * ARGUMENTS:	    queue: (Queue *) -- the queue to be operated on.
+ * ARGUMENTS:	    queue: (qarray *) -- the queue to be operated on.
  *		    data: (void **) -- data is placed here after dequeueing.
  *
  * RETURN:	    int -- 0 on success, -1 otherwise.
  *
  * NOTES:	    O(1)
  ***/
-int queue_dequeue(Queue * queue, void ** data)
+int qarray_dequeue(qarray * queue, void ** data)
 {
-  
-  if (queue_isempty(queue))
+  if (queue == NULL || qarray_isempty(queue))
     return -1;
 
   *data = queue->queue[queue->front];
@@ -132,58 +140,62 @@ int queue_dequeue(Queue * queue, void ** data)
 
   queue->size--;
 
-  if (queue_isempty(queue))
+  if (qarray_isempty(queue))
     queue->front = -1;
 
   return 0;
 }
 
 /******************************************************************************
- * FUNCTION:	    queue_peek
+ * FUNCTION:	    qarray_peek
  *
  * DESCRIPTION:	    Returns the next element in the queue without removing it.
  *
- * ARGUMENTS:	    queue: (Queue *) -- the queue to be operated on.
+ * ARGUMENTS:	    queue: (qarray *) -- the queue to be operated on.
  *
  * RETURN:	    (void *) -- pointer to the next element in the queue, or
  *		    NULL if the queue is empty.
  *
  * NOTES:	    O(1)
  ***/
-void * queue_peek(Queue * queue)
+void * qarray_peek(qarray * queue)
 {
-  if (queue_isempty(queue))
+  if (qarray_isempty(queue))
     return NULL;
 
   return queue->queue[queue->front];
 }
 
 /******************************************************************************
- * FUNCTION:	    queue_dest
+ * FUNCTION:	    qarray_destroy
  *
  * DESCRIPTION:	    Removes all elements from the queue, and sets all bytes to
  *		    0. If destroy is set to NULL, does not free the memory held
  *		    in the queue.
  *
- * ARGUMENTS:	    queue: (Queue *) -- the queue to be operated on.
+ * ARGUMENTS:	    queue: (qarray **) -- the queue to be operated on.
  *
  * RETURN:	    void.
  *
  * NOTES:	    O(n)
  ***/
-void queue_dest(Queue * queue)
+void qarray_destroy(qarray ** queue)
 {
-  int i = queue->front;
-  while (i < queue->back) {
-    if (queue->queue[i] != NULL && queue->destroy != NULL)
-      queue->destroy(queue->queue[i]);
-    else if (queue->queue[i] != NULL)
-      free(queue->queue[i]);
+  if (queue == NULL || *queue == NULL)
+    return;
 
-    i = (i + 1) % queue->capacity;
+  int i = (*queue)->front;
+  while (i < (*queue)->back) {
+    if ((*queue)->queue[i] != NULL && (*queue)->destroy != NULL)
+      (*queue)->destroy((*queue)->queue[i]);
+    else if ((*queue)->queue[i] != NULL)
+      free((*queue)->queue[i]);
+
+    i = (i + 1) % (*queue)->capacity;
   }
     
-  memset(queue, 0, sizeof(Queue));
+  free(*queue);
+  *queue = NULL;
   return;
 }
 
@@ -194,11 +206,11 @@ void queue_dest(Queue * queue)
 #ifdef CONFIG_DEBUG_QARRAY
 int main(int argc, char * argv[])
 {
-  int * p;
-  Queue * q; /* Pointer to Queue */
+  int * p = NULL;
+  qarray * q = NULL; /* Pointer to queue */
  
-  q = malloc(sizeof(Queue));
-  queue_init(q, NULL, 10); /* initialize */
+  q = qarray_create(NULL, 10); /* initialize */
+  assert(q != NULL);
 
   srand((unsigned)time(NULL));
 
@@ -207,28 +219,28 @@ int main(int argc, char * argv[])
     p = malloc(sizeof(int));
     *p = rand() % 10;
     printf("int %d @ %p\n", *p, p);
-    queue_enqueue(q, (void *)p); /* Queue up the pointer. */
+    qarray_enqueue(q, (void *)p); /* queue up the pointer. */
   }
   
   /* Test to ensure that enqueueing on a full queue returns -1. */
   p = malloc(sizeof(int));
   *p = 0;
-  assert(queue_enqueue(q, (void *)p) == -1);
+  assert(qarray_enqueue(q, (void *)p) == -1);
   free(p);
 
   printf("====== Removing ======\n");
-  while (!queue_isempty(q)) {
-    queue_dequeue(q, (void **)&p);
+  while (!qarray_isempty(q)) {
+    qarray_dequeue(q, (void **)&p);
     printf("int %d @ %p\n", *p, p);
     free(p);
   }
 
   /* Test to ensure that dequeueing from an empty queue returns -1. */
-  assert(queue_dequeue(q, (void **)&p) == -1);
+  assert(qarray_dequeue(q, (void **)&p) == -1);
 
-  /* Must call init() in order to be able to use the Queue again. */
-  queue_dest(q);
-  free(q);
+  /* Must call qarray_create() in order to be able to use the queue again. */
+  qarray_destroy(&q);
+  assert(q == NULL);
 
   return 0;
 }
