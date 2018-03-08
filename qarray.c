@@ -9,7 +9,7 @@
  *
  * CREATED:	    04/14/2017
  *
- * LAST EDITED:	    01/04/2018
+ * LAST EDITED:	    02/12/2018
  ***/
 
 /* SAMPLE OUTPUT:
@@ -188,12 +188,10 @@ void qarray_destroy(qarray ** queue)
   while (i < (*queue)->back) {
     if ((*queue)->queue[i] != NULL && (*queue)->destroy != NULL)
       (*queue)->destroy((*queue)->queue[i]);
-    else if ((*queue)->queue[i] != NULL)
-      free((*queue)->queue[i]);
-
     i = (i + 1) % (*queue)->capacity;
   }
-    
+
+  free((*queue)->queue);
   free(*queue);
   *queue = NULL;
   return;
